@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
+val githubToken: String = "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"
+
 android {
     namespace = "com.github.hahmadfaiq21.githubuser"
     compileSdk = 35
@@ -15,6 +17,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "GITHUB_TOKEN", "\"$githubToken\"")
     }
 
     buildTypes {
@@ -27,6 +30,7 @@ android {
         }
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
     compileOptions {
@@ -50,6 +54,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.glide)
     implementation(libs.material)
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
