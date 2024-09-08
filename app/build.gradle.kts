@@ -66,8 +66,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.glide)
     implementation(libs.material)
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
