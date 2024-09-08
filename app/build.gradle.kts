@@ -1,9 +1,21 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
-val githubToken: String = "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"
+val githubToken: String by lazy {
+    val properties = Properties()
+    val localPropertiesFile = rootProject.file("local.properties")
+    if (localPropertiesFile.exists()) {
+        properties.load(FileInputStream(localPropertiesFile))
+        properties.getProperty("GITHUB_TOKEN") ?: ""
+    } else {
+        ""
+    }
+}
 
 android {
     namespace = "com.github.hahmadfaiq21.githubuser"
