@@ -10,7 +10,10 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toTopOf="@+id/rv_user"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,14 +34,31 @@
                 android:maxLines="1" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageView
-            android:id="@+id/btn_search"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end|center_vertical"
+            android:orientation="horizontal"
             android:layout_margin="16dp"
-            android:contentDescription="@string/search_icon"
-            android:src="@drawable/ic_search" />
+            android:layout_gravity="end|center_vertical">
+
+            <ImageView
+                android:id="@+id/btn_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="@string/clear_text"
+                android:src="@drawable/ic_clear"
+                android:visibility="gone"
+                app:tint="?attr/colorOnSurface" />
+
+            <ImageView
+                android:id="@+id/btn_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/search_icon"
+                android:src="@drawable/ic_search"
+                app:tint="?attr/colorOnSurface" />
+        </LinearLayout>
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

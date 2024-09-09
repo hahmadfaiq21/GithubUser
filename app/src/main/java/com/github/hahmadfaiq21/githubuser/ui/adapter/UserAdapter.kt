@@ -5,43 +5,57 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.hahmadfaiq21.githubuser.data.User
+import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.ItemUserBinding
 
 class UserAdapter: RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-    private val list = ArrayList<User>()
+    private val list = ArrayList<UserResponse>()
+    private var onItemClickCallback: OnItemClickCallback? = null
 
-    fun setList(users: ArrayList<User>) {
+    fun setList(userResponses: ArrayList<UserResponse>) {
         val oldSize = list.size
-        val newSize = users.size
+        val newSize = userResponses.size
 
-        // Add new users
+        // Add new userResponses
         if (newSize > oldSize) {
-            list.addAll(users.subList(oldSize, newSize))
+            list.addAll(userResponses.subList(oldSize, newSize))
             notifyItemRangeInserted(oldSize, newSize - oldSize)
         }
-        // Remove users
+        // Remove userResponses
         else if (newSize < oldSize) {
             list.subList(newSize, oldSize).clear()
             notifyItemRangeRemoved(newSize, oldSize - newSize)
         }
-        // Update users if sizes are the same
+        // Update userResponses if sizes are the same
         else {
             list.clear()
-            list.addAll(users)
+            list.addAll(userResponses)
             notifyItemRangeChanged(0, newSize)
         }
     }
 
+    interface OnItemClickCallback {
+        fun onItemClicked(data: UserResponse)
+    }
+
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback
+    }
+
     inner class UserViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(user: User) {
+        fun bind(userResponse: UserResponse) {
+
+            binding.root.setOnClickListener {
+                onItemClickCallback?.onItemClicked(userResponse)
+            }
+
             binding.apply {
-                tvUsername.text = user.login
+                tvUsername.text = userResponse.login
                 Glide.with(itemView)
-                    .load(user.avatarUrl)
+                    .load(userResponse.avatarUrl)
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .centerCrop()
+                    .circleCrop()
                     .into(ivUser)
             }
         }

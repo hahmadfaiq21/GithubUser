@@ -4,4 +4,18 @@
     <string name="user_profile_picture">User Profile Picture</string>
     <string name="search_hint">Search here</string>
     <string name="search_icon">Search Icon</string>
+    <string name="name">Name</string>
+    <string name="company">Company</string>
+    <string name="zero">0</string>
+    <string name="repository">Repository</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="bio">Bio</string>
+    <string name="location">Location</string>
+
+    <string name="tab_1">Followers</string>
+    <string name="tab_2">Following</string>
+    <string name="tab_layout">Tab Layout</string>
+    <string name="view_pager">View Pager</string>
+    <string name="clear_text">Clear Text</string>
 </resources>
