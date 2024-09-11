@@ -7,14 +7,21 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.github.hahmadfaiq21.githubuser.R
 import com.github.hahmadfaiq21.githubuser.databinding.ActivityDetailUserBinding
 import com.github.hahmadfaiq21.githubuser.ui.adapter.SectionPagerAdapter
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailUserBinding
     private val detailUserViewModel by viewModels<DetailUserViewModel>()
+    private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,6 +30,7 @@ class DetailUserActivity : AppCompatActivity() {
         enableEdgeToEdge()
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         val username = intent.getStringExtra(EXTRA_USERNAME)
+        val id = intent.getIntExtra(EXTRA_ID, 0)
         if (username != null) {
             detailUserViewModel.setUserDetail(username)
         }
@@ -47,6 +55,31 @@ class DetailUserActivity : AppCompatActivity() {
             }
         }
 
+        CoroutineScope(Dispatchers.IO).launch {
+            val count = detailUserViewModel.checkUser(id)
+            withContext(Dispatchers.Main){
+                if (count != null) {
+                    if (count > 0) {
+                        binding.fab.setImageResource(R.drawable.ic_favorite)
+                        isFavorite = true
+                    } else {
+                        binding.fab.setImageResource(R.drawable.ic_unfavorite)
+                        isFavorite = false
+                    }
+                }
+            }
+        }
+
+        binding.fab.setOnClickListener {
+            isFavorite = !isFavorite
+            if (isFavorite) {
+                detailUserViewModel.addToFavorite(username.toString(), id)
+            } else {
+                detailUserViewModel.removeFromFavorite(id)
+            }
+            toggleFavoriteIcon(binding.fab)
+        }
+
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
 
@@ -57,8 +90,17 @@ class DetailUserActivity : AppCompatActivity() {
         }.attach()
     }
 
+    private fun toggleFavoriteIcon(fab: FloatingActionButton) {
+        if (isFavorite) {
+            fab.setImageResource(R.drawable.ic_favorite)
+        } else {
+            fab.setImageResource(R.drawable.ic_unfavorite)
+        }
+    }
+
     companion object {
         const val EXTRA_USERNAME = "extra_username"
+        const val EXTRA_ID = "extra_id"
     }
 
 }

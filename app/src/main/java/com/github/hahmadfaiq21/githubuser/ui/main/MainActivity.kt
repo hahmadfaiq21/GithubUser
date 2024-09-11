@@ -30,12 +30,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         enableEdgeToEdge()
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
-        showLoading(false)
         adapter = UserAdapter()
         adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserResponse) {
                 Intent(this@MainActivity, DetailUserActivity::class.java).also {
                     it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
+                    it.putExtra(DetailUserActivity.EXTRA_ID, data.id)
                     startActivity(it)
                 }
             }
@@ -57,10 +57,6 @@ class MainActivity : AppCompatActivity() {
                 showLoading(false)
             }
 
-            if (etQuery.text.isNullOrEmpty()) {
-                showLoading(false)
-            }
-
             etQuery.addTextChangedListener {
                 showLoading(true)
                 if (it.toString().isNotEmpty()) {
@@ -68,6 +64,7 @@ class MainActivity : AppCompatActivity() {
                     searchUser()
                 } else {
                     btnClear.visibility = View.GONE
+                    showLoading(false)
                 }
             }
 
