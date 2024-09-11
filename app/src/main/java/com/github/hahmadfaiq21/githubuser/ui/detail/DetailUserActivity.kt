@@ -57,7 +57,7 @@ class DetailUserActivity : AppCompatActivity() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val count = detailUserViewModel.checkUser(id)
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 if (count != null) {
                     if (count > 0) {
                         binding.fab.setImageResource(R.drawable.ic_favorite)

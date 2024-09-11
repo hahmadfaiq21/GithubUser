@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase
     entities = [FavoriteUser::class],
     version = 1
 )
-abstract class UserDatabase: RoomDatabase() {
+abstract class UserDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: UserDatabase? = null
 
