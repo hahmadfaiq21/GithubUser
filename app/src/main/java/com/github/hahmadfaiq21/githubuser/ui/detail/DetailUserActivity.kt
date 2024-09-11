@@ -11,6 +11,7 @@ import com.github.hahmadfaiq21.githubuser.R
 import com.github.hahmadfaiq21.githubuser.databinding.ActivityDetailUserBinding
 import com.github.hahmadfaiq21.githubuser.ui.adapter.SectionPagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -74,11 +75,14 @@ class DetailUserActivity : AppCompatActivity() {
             isFavorite = !isFavorite
             if (isFavorite) {
                 detailUserViewModel.addToFavorite(username.toString(), id)
+                showSnackBar("Added to Favorite")
             } else {
                 detailUserViewModel.removeFromFavorite(id)
+                showSnackBar("Removed from Favorite")
             }
             toggleFavoriteIcon(binding.fab)
         }
+
 
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
@@ -96,6 +100,10 @@ class DetailUserActivity : AppCompatActivity() {
         } else {
             fab.setImageResource(R.drawable.ic_unfavorite)
         }
+    }
+
+    private fun showSnackBar(message: String) {
+        Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
     companion object {
