@@ -1,5 +1,6 @@
 package com.github.hahmadfaiq21.githubuser.ui.detail
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -20,16 +21,18 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         val username = intent.getStringExtra(EXTRA_USERNAME)
         if (username != null) {
             detailUserViewModel.setUserDetail(username)
         }
-        detailUserViewModel.getUserDetail().observe(this) {
+
+        detailUserViewModel.user.observe(this) {
             if (it != null) {
                 binding.apply {
                     Glide.with(this@DetailUserActivity)
                         .load(it.avatarUrl)
-                        .centerCrop()
+                        .circleCrop()
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(ivProfile)
                     tvName.text = it.name
@@ -44,7 +47,10 @@ class DetailUserActivity : AppCompatActivity() {
             }
         }
 
-        val sectionPagerAdapter = SectionPagerAdapter(this)
+        val bundle = Bundle()
+        bundle.putString(EXTRA_USERNAME, username)
+
+        val sectionPagerAdapter = SectionPagerAdapter(this, bundle)
         binding.viewPager.adapter = sectionPagerAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = sectionPagerAdapter.getPageTitle(position, this)

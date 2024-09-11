@@ -2,6 +2,7 @@ package com.github.hahmadfaiq21.githubuser.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -28,8 +29,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        showLoading(false)
         adapter = UserAdapter()
-        adapter.setOnItemClickCallback(object: UserAdapter.OnItemClickCallback {
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserResponse) {
                 Intent(this@MainActivity, DetailUserActivity::class.java).also {
                     it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
@@ -38,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+
         binding.apply {
             rvUser.layoutManager = LinearLayoutManager(this@MainActivity)
             rvUser.setHasFixedSize(true)
@@ -47,11 +51,13 @@ class MainActivity : AppCompatActivity() {
                 searchUser()
                 hideKeyboard()
             }
+
             btnClear.setOnClickListener {
                 etQuery.text?.clear()
                 hideKeyboard()
                 showLoading(false)
             }
+
             etQuery.addTextChangedListener {
                 showLoading(true)
                 if (it.toString().isNotEmpty()) {
@@ -61,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                     btnClear.visibility = View.GONE
                 }
             }
+
             etQuery.setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     searchUser()
@@ -71,7 +78,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mainViewModel.getSearchUsers().observe(this) { users ->
+        mainViewModel.listUsers.observe(this) { users ->
             if (users != null) {
                 Log.d("Users", users.toString())
                 adapter.setList(users)
@@ -91,12 +98,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         currentFocus?.let { view ->
             inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
-
 
     private fun showLoading(state: Boolean) {
         if (state) {

@@ -2,7 +2,7 @@ package com.github.hahmadfaiq21.githubuser.data.response
 
 import com.google.gson.annotations.SerializedName
 
-data class UserResponse (
+data class UserResponse(
     @SerializedName("id")
     val id: Int,
 

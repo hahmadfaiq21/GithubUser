@@ -61,11 +61,12 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.viewpager2)
     implementation(libs.retrofit)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.glide)
-    implementation(libs.material)
+    implementation(libs.androidx.coordinatorlayout)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

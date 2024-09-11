@@ -8,7 +8,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.ItemUserBinding
 
-class UserAdapter: RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
     private val list = ArrayList<UserResponse>()
     private var onItemClickCallback: OnItemClickCallback? = null
@@ -43,7 +43,8 @@ class UserAdapter: RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
         this.onItemClickCallback = onItemClickCallback
     }
 
-    inner class UserViewHolder(private val binding: ItemUserBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class UserViewHolder(private val binding: ItemUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(userResponse: UserResponse) {
 
             binding.root.setOnClickListener {

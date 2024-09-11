@@ -3,6 +3,7 @@ package com.github.hahmadfaiq21.githubuser.api
 import com.github.hahmadfaiq21.githubuser.BuildConfig
 import com.github.hahmadfaiq21.githubuser.data.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.data.Users
+import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -26,11 +27,11 @@ interface Api {
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
     fun getFollowers(
         @Path("username") username: String
-    ): Call<Users>
+    ): Call<ArrayList<UserResponse>>
 
     @GET("users/{username}/following")
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
     fun getFollowing(
         @Path("username") username: String
-    ): Call<Users>
+    ): Call<ArrayList<UserResponse>>
 }

@@ -2,7 +2,7 @@
     <string name="app_name">GithubUser</string>
     <string name="username">Username</string>
     <string name="user_profile_picture">User Profile Picture</string>
-    <string name="search_hint">Search here</string>
+    <string name="search_hint">Search username</string>
     <string name="search_icon">Search Icon</string>
     <string name="name">Name</string>
     <string name="company">Company</string>
