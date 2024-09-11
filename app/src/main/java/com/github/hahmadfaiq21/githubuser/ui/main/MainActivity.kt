@@ -54,7 +54,10 @@ class MainActivity : AppCompatActivity() {
 
             btnClear.setOnClickListener {
                 etQuery.text?.clear()
-                hideKeyboard()
+                showLoading(false)
+            }
+
+            if (etQuery.text.isNullOrEmpty()) {
                 showLoading(false)
             }
 

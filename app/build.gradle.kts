@@ -4,6 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 val githubToken: String by lazy {
@@ -67,6 +68,15 @@ dependencies {
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.glide)
     implementation(libs.androidx.coordinatorlayout)
+
+    implementation (libs.androidx.room.ktx)
+    implementation (libs.androidx.room.runtime)
+    annotationProcessor (libs.androidx.room.compiler)
+    androidTestImplementation (libs.androidx.room.testing)
+
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.kotlinx.coroutines.core)
+    implementation (libs.kotlinx.coroutines.android)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
