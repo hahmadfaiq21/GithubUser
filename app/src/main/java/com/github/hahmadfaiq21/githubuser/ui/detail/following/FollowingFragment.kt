@@ -1,6 +1,5 @@
 package com.github.hahmadfaiq21.githubuser.ui.detail.following
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
