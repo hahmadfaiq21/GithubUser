@@ -51,8 +51,8 @@ class FavoriteFragment : Fragment() {
             rvUser.adapter = adapter
         }
 
-        favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner){
-            if (it != null){
+        favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
+            if (it != null) {
                 val list = mapList(it)
                 adapter.setList(list)
             }
@@ -61,7 +61,7 @@ class FavoriteFragment : Fragment() {
 
     private fun mapList(users: List<FavoriteUser>): ArrayList<UserResponse> {
         val listUsers = ArrayList<UserResponse>()
-        for (user in users){
+        for (user in users) {
             val userMapped = UserResponse(
                 user.id,
                 user.login,

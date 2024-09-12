@@ -21,7 +21,6 @@ class FollowersFragment : Fragment(R.layout.fragment_follow) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         val args = arguments
         username = args?.getString(DetailUserActivity.EXTRA_USERNAME).toString()
 

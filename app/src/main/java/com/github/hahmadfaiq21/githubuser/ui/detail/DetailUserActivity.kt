@@ -1,6 +1,5 @@
 package com.github.hahmadfaiq21.githubuser.ui.detail
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -29,7 +28,6 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         val username = intent.getStringExtra(EXTRA_USERNAME)
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
