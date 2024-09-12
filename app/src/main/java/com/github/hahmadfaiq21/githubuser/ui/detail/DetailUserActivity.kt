@@ -32,6 +32,7 @@ class DetailUserActivity : AppCompatActivity() {
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         val username = intent.getStringExtra(EXTRA_USERNAME)
         val id = intent.getIntExtra(EXTRA_ID, 0)
+        val avatarUrl = intent.getStringExtra(EXTRA_URL)
         if (username != null) {
             detailUserViewModel.setUserDetail(username)
         }
@@ -74,7 +75,7 @@ class DetailUserActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             isFavorite = !isFavorite
             if (isFavorite) {
-                detailUserViewModel.addToFavorite(username.toString(), id)
+                detailUserViewModel.addToFavorite(username.toString(), id, avatarUrl.toString())
                 showSnackBar("Added to Favorite")
             } else {
                 detailUserViewModel.removeFromFavorite(id)
@@ -109,6 +110,7 @@ class DetailUserActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_USERNAME = "extra_username"
         const val EXTRA_ID = "extra_id"
+        const val EXTRA_URL = "extra_url"
     }
 
 }

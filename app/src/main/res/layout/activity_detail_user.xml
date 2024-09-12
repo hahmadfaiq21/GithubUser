@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
     tools:context=".ui.detail.DetailUserActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -36,7 +37,6 @@
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="48dp"
                     android:gravity="center"
                     android:text="@string/username"
                     android:textSize="20sp"

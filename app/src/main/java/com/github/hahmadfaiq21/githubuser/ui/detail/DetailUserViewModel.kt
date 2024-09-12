@@ -47,11 +47,12 @@ class DetailUserViewModel(application: Application) : AndroidViewModel(applicati
             })
     }
 
-    fun addToFavorite(username: String, id: Int) {
+    fun addToFavorite(username: String, id: Int, avatarUrl: String) {
         CoroutineScope(Dispatchers.IO).launch {
             val user = FavoriteUser(
                 username,
                 id,
+                avatarUrl
             )
             userDao?.addToFavorite(user)
         }

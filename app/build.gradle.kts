@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.glide)
     implementation(libs.androidx.coordinatorlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
 
     implementation (libs.androidx.room.ktx)
     implementation (libs.androidx.room.runtime)
