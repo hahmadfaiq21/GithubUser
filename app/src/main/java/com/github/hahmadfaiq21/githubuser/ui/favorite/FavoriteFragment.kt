@@ -77,6 +77,16 @@ class FavoriteFragment : Fragment() {
         return listUsers
     }
 
+    override fun onResume() {
+        super.onResume()
+        favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
+            if (it != null) {
+                val list = mapList(it)
+                adapter.setList(list)
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
