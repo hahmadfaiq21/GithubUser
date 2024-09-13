@@ -20,4 +20,5 @@
     <string name="fab">Floating Action Button</string>
     <string name="home">Home</string>
     <string name="favorite">Favorite</string>
+    <string name="back">Back</string>
 </resources>

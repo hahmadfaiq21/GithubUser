@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="50dp"
+    android:paddingTop="32dp"
     tools:context=".ui.favorite.FavoriteFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -13,8 +13,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorSurface"
         android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        android:title="">
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <TextView
             android:id="@+id/toolbar_title"
@@ -22,8 +21,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center"
+            android:layout_margin="16dp"
             android:text="@string/favorite"
-            android:textColor="@android:color/white"
+            android:textStyle="bold"
             android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -31,5 +31,6 @@
         android:id="@+id/rv_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="125dp"
         tools:listitem="@layout/item_user" />
 </LinearLayout>

@@ -28,13 +28,14 @@ class DetailUserActivity : AppCompatActivity() {
         binding = ActivityDetailUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
         enableEdgeToEdge()
+
         val username = intent.getStringExtra(EXTRA_USERNAME)
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
+
         if (username != null) {
             detailUserViewModel.setUserDetail(username)
         }
-
         detailUserViewModel.user.observe(this) {
             if (it != null) {
                 binding.apply {
@@ -44,8 +45,8 @@ class DetailUserActivity : AppCompatActivity() {
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .into(ivProfile)
                     tvName.text = it.name
-                    tvUsername.text = it.login
                     tvBio.text = it.bio
+                    tvUsername.text = it.login
                     tvFollowers.text = it.followers.toString()
                     tvFollowing.text = it.following.toString()
                     tvCompany.text = it.company
@@ -70,6 +71,10 @@ class DetailUserActivity : AppCompatActivity() {
             }
         }
 
+        binding.btnBack.setOnClickListener {
+            finish()
+        }
+
         binding.fab.setOnClickListener {
             isFavorite = !isFavorite
             if (isFavorite) {
@@ -81,7 +86,6 @@ class DetailUserActivity : AppCompatActivity() {
             }
             toggleFavoriteIcon(binding.fab)
         }
-
 
         val bundle = Bundle()
         bundle.putString(EXTRA_USERNAME, username)
