@@ -59,7 +59,6 @@ class HomeFragment : Fragment() {
                 }
             }
 
-
             etQuery.setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     searchUser()
@@ -79,9 +78,7 @@ class HomeFragment : Fragment() {
                 Log.d("Users", "No data found")
             }
         }
-
     }
-
 
     private fun setupRecyclerView() {
         adapter = UserAdapter()

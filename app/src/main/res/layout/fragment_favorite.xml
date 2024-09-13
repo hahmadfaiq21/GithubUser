@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="32dp"
+    android:paddingTop="46dp"
     tools:context=".ui.favorite.FavoriteFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -20,11 +20,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:gravity="center"
             android:layout_margin="16dp"
+            android:gravity="center"
             android:text="@string/favorite"
-            android:textStyle="bold"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -33,4 +33,5 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="125dp"
         tools:listitem="@layout/item_user" />
+
 </LinearLayout>

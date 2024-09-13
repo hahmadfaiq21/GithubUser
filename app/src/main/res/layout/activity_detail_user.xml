@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="32dp"
+    android:paddingTop="46dp"
     tools:context=".ui.detail.DetailUserActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -29,27 +29,27 @@
 
                 <ImageView
                     android:id="@+id/btn_back"
-                    android:layout_margin="16dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
                     android:contentDescription="@string/back"
-                    app:tint="?attr/colorOnSurface"
-                    android:src="@drawable/ic_back" />
+                    android:src="@drawable/ic_back"
+                    app:tint="?attr/colorOnSurface" />
 
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_margin="16dp"
                     tools:text="@string/username" />
             </androidx.appcompat.widget.Toolbar>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_marginTop="64dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="64dp">
 
                 <ImageView
                     android:id="@+id/iv_profile"
@@ -146,6 +146,7 @@
                             android:textAlignment="center"
                             android:textSize="14sp" />
                     </TableRow>
+
                 </TableLayout>
 
                 <TextView
