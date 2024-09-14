@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="46dp"
     tools:context=".ui.detail.DetailUserActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -168,7 +167,8 @@
                     android:id="@+id/tv_bio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="16dp"
                     android:textAlignment="center"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -179,10 +179,10 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         <com.google.android.material.tabs.TabLayout
+            android:layout_marginTop="16dp"
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:contentDescription="@string/tab_layout"
             app:tabGravity="fill"
             app:tabMode="fixed" />
@@ -201,8 +201,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="65dp"
+        android:layout_margin="32dp"
         android:contentDescription="@string/fab"
         android:src="@drawable/favorite_toggle" />
 
