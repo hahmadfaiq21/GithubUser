@@ -30,10 +30,12 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (viewModel.randomUser.value == null) {
+            showLoading(true)
             viewModel.getRandomUser()
         }
 
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
+            showLoading(false)
             if (user != null) {
                 binding.tvName.text = user.name
                 binding.tvUsername.text = user.login
@@ -58,10 +60,15 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnClear.setOnClickListener {
+            showLoading(true)
             viewModel.getRandomUser()
         }
 
         binding.btnFavorite.setOnClickListener {
         }
+    }
+
+    private fun showLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
     }
 }
