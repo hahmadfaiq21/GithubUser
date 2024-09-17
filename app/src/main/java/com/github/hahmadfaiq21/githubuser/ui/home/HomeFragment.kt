@@ -33,7 +33,8 @@ class HomeFragment : Fragment() {
 
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
             if (user != null) {
-                binding.tvName.text = user.login
+                binding.tvName.text = user.name
+                binding.tvUsername.text = user.login
                 binding.tvCompany.text = user.company
                 binding.tvLocation.text = user.location
                 binding.tvBio.text = user.bio
@@ -42,12 +43,6 @@ class HomeFragment : Fragment() {
                 Glide.with(this)
                     .load(user.avatarUrl)
                     .into(ivProfile)
-
-                binding.tvRepository.text = user.publicRepos.toString()
-                binding.tvFollowers.text = user.followers.toString()
-                binding.tvFollowing.text = user.following.toString()
-            } else {
-                binding.tvName.text = "User not found"
             }
         }
 
