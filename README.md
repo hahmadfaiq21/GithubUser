@@ -15,5 +15,5 @@ Whether you’re building custom tools, automating tasks, or integrating GitHub 
 
 ## GithubUser Interfaces
 <p alignment="center">
-  <img src="https://github.com/user-attachments/assets/b1e9504b-ae02-4240-99ff-548edd41e304">
+  <img src="https://github.com/user-attachments/assets/cc803268-91e9-4a99-af52-23fe32940f36">
 </p>
