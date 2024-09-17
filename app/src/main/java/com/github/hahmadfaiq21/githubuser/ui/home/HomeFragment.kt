@@ -1,29 +1,20 @@
 package com.github.hahmadfaiq21.githubuser.ui.home
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
+import com.bumptech.glide.Glide
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
-import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
-import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 
 class HomeFragment : Fragment() {
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private lateinit var adapter: UserAdapter
     private val viewModel by viewModels<HomeViewModel>()
-
+    
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -35,95 +26,36 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRecyclerView()
-        binding.apply {
-            btnSearch.setOnClickListener {
-                searchUser()
-                hideKeyboard()
-            }
 
-            btnClear.setOnClickListener {
-                etQuery.text?.clear()
-                showLoading(false)
-            }
-
-            etQuery.addTextChangedListener {
-                showLoading(true)
-                val query = it?.toString()
-                if (!query.isNullOrEmpty()) {
-                    btnClear.visibility = View.VISIBLE
-                    searchUser()
-                } else {
-                    btnClear.visibility = View.GONE
-                    showLoading(false)
-                }
-            }
-
-            etQuery.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    searchUser()
-                    hideKeyboard()
-                    return@setOnKeyListener true
-                }
-                return@setOnKeyListener false
-            }
+        if (viewModel.randomUser.value == null) {
+            viewModel.getRandomUser()
         }
 
-        viewModel.listUsers.observe(viewLifecycleOwner) { users ->
-            if (users != null) {
-                Log.d("Users", users.toString())
-                adapter.setList(users)
-                showLoading(false)
+        viewModel.randomUser.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                binding.tvName.text = user.login
+                binding.tvCompany.text = user.company
+                binding.tvLocation.text = user.location
+                binding.tvBio.text = user.bio
+
+                val ivProfile = binding.ivProfile
+                Glide.with(this)
+                    .load(user.avatarUrl)
+                    .into(ivProfile)
+
+                binding.tvRepository.text = user.publicRepos.toString()
+                binding.tvFollowers.text = user.followers.toString()
+                binding.tvFollowing.text = user.following.toString()
             } else {
-                Log.d("Users", "No data found")
+                binding.tvName.text = "User not found"
             }
         }
-    }
 
-    private fun setupRecyclerView() {
-        adapter = UserAdapter()
-        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: UserResponse) {
-                Intent(activity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
-                    it.putExtra(DetailUserActivity.EXTRA_ID, data.id)
-                    it.putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
-                    startActivity(it)
-                }
-            }
-        })
-
-        binding.rvUser.layoutManager = LinearLayoutManager(activity)
-        binding.rvUser.setHasFixedSize(true)
-        binding.rvUser.adapter = adapter
-    }
-
-    private fun searchUser() {
-        binding.apply {
-            val query = etQuery.text.toString()
-            if (query.isEmpty()) return
-            viewModel.setSearchUsers(query)
+        binding.btnClear.setOnClickListener {
+            viewModel.getRandomUser()
         }
-    }
 
-    private fun hideKeyboard() {
-        val inputMethodManager =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        activity?.currentFocus?.let { view ->
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+        binding.btnFavorite.setOnClickListener {
         }
-    }
-
-    private fun showLoading(state: Boolean) {
-        if (state) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
