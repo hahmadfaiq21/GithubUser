@@ -1,5 +1,5 @@
 ﻿# GithubUser
-<p alignment="center">
+<p align="center">
   <img src="https://github.com/user-attachments/assets/48f012db-79ba-45ca-b349-9329cac32220">
 </p>
 GitHub REST API is a powerful tool that allows developers to interact programmatically with GitHub’s platform. By using standard HTTP methods such as GET, POST, PUT, and DELETE, you can perform a wide range of operations, including managing repositories, retrieving user information, handling issues, and even triggering GitHub Actions. You can access Github REST API with: https://api.github.com <br>
@@ -14,6 +14,6 @@ https://docs.github.com/en/rest?apiVersion=2022-11-28
 Whether you’re building custom tools, automating tasks, or integrating GitHub with other services, the GitHub REST API provides the flexibility and functionality you need to streamline your development process.
 
 ## GithubUser Interfaces
-<p alignment="center">
-  <img src="https://github.com/user-attachments/assets/cc803268-91e9-4a99-af52-23fe32940f36">
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/cc803268-91e9-4a99-af52-23fe32940f36" alt="Github User Interface">
 </p>
