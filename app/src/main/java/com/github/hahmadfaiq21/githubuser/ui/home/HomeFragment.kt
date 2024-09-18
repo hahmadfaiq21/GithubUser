@@ -35,8 +35,8 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        showLoading(true)
         if (viewModel.randomUser.value == null) {
-            showLoading(true)
             viewModel.getRandomUser()
             CoroutineScope(Dispatchers.IO).launch {
                 val count = viewModel.checkUser(id)
@@ -52,7 +52,6 @@ class HomeFragment : Fragment() {
         }
 
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
-            showLoading(false)
             if (user != null) {
                 binding.tvName.text = user.name
                 binding.tvUsername.text = user.login
@@ -64,6 +63,7 @@ class HomeFragment : Fragment() {
                 Glide.with(this)
                     .load(user.avatarUrl)
                     .into(ivProfile)
+                showLoading(false)
             }
 
             binding.btnDetails.setOnClickListener {
@@ -77,8 +77,8 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnClear.setOnClickListener {
-            showLoading(true)
             viewModel.getRandomUser()
+            showLoading(true)
         }
 
         binding.btnFavorite.setOnClickListener {
@@ -89,6 +89,7 @@ class HomeFragment : Fragment() {
             viewModel.addToFavorite(username.toString(), id!!, avatarUrl.toString())
             Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
             viewModel.getRandomUser()
+            showLoading(true)
         }
     }
 
