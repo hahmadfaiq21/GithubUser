@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [FavoriteUser::class],
-    version = 1
-)
+    version = 2,
+    exportSchema = false)
 abstract class UserDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: UserDatabase? = null

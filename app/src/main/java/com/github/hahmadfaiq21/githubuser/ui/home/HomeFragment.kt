@@ -10,12 +10,18 @@ import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private val viewModel by viewModels<HomeViewModel>()
+    private var isFavorite = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +38,17 @@ class HomeFragment : Fragment() {
         if (viewModel.randomUser.value == null) {
             showLoading(true)
             viewModel.getRandomUser()
+            CoroutineScope(Dispatchers.IO).launch {
+                val count = viewModel.checkUser(id)
+                withContext(Dispatchers.Main) {
+                    if (count != null) {
+                        if (count > 0) {
+                            isFavorite = true
+                            viewModel.getRandomUser()
+                        }
+                    }
+                }
+            }
         }
 
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
@@ -65,6 +82,13 @@ class HomeFragment : Fragment() {
         }
 
         binding.btnFavorite.setOnClickListener {
+            isFavorite = !isFavorite
+            val username = viewModel.randomUser.value?.login
+            val id = viewModel.randomUser.value?.id
+            val avatarUrl = viewModel.randomUser.value?.avatarUrl
+            viewModel.addToFavorite(username.toString(), id!!, avatarUrl.toString())
+            Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
+            viewModel.getRandomUser()
         }
     }
 

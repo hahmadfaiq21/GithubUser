@@ -34,6 +34,7 @@ class DetailUserActivity : AppCompatActivity() {
         if (username != null) {
             detailUserViewModel.setUserDetail(username)
         }
+
         detailUserViewModel.user.observe(this) {
             if (it != null) {
                 binding.apply {

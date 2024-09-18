@@ -3,12 +3,17 @@ package com.github.hahmadfaiq21.githubuser.data.local
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface FavoriteUserDao {
-    @Insert
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToFavorite(favoriteUser: FavoriteUser)
+
+    @Query("SELECT id FROM favorite_user")
+    suspend fun getAllFavoriteUserIds(): List<Int>
 
     @Query("SELECT * FROM favorite_user")
     fun getFavoriteUser(): LiveData<List<FavoriteUser>>
