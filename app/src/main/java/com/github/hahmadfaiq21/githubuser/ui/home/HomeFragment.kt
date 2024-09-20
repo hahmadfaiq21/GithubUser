@@ -85,13 +85,13 @@ class HomeFragment : Fragment() {
             }
 
             btnFavorite.setOnClickListener {
-                toggleFavorite(user)
+                addToFavorite(user)
             }
         }
         showLoading(false)
     }
 
-    private fun toggleFavorite(user: DetailUserResponse) {
+    private fun addToFavorite(user: DetailUserResponse) {
         isFavorite = !isFavorite
         viewModel.addToFavorite(user.login, user.id, user.avatarUrl)
         Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
