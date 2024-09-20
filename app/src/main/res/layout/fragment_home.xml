@@ -65,10 +65,10 @@
                 android:layout_width="250dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/name"
                 android:textAlignment="center"
-                android:textSize="24sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -79,7 +79,7 @@
                 android:layout_margin="8dp"
                 android:text="@string/username"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -88,8 +88,8 @@
 
                 <ImageView
                     android:id="@+id/iv_profile"
-                    android:layout_width="240dp"
-                    android:layout_height="240dp"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="16dp"
                     android:contentDescription="@string/user_profile_picture"
@@ -109,7 +109,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="8dp"
+                android:layout_margin="4dp"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 tools:text="@string/company" />
@@ -119,27 +119,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="8dp"
+                android:layout_margin="4dp"
                 android:textAlignment="center"
                 android:textSize="16sp"
                 tools:text="@string/location" />
-
-            <TextView
-                android:id="@+id/tv_bio"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="8dp"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                tools:text="@string/bio" />
 
             <Button
                 android:id="@+id/btn_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_margin="16dp"
+                android:layout_margin="8dp"
                 android:text="@string/see_details" />
 
         </LinearLayout>
@@ -152,9 +142,12 @@
         android:layout_margin="16dp"
         android:gravity="center"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView">
+        app:layout_constraintTop_toBottomOf="@+id/cardView"
+        app:layout_constraintVertical_bias="0">
 
         <ImageView
             android:id="@+id/btn_clear"

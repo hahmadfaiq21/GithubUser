@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.github.hahmadfaiq21.githubuser.data.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 import com.google.android.material.snackbar.Snackbar
@@ -22,74 +23,94 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel by viewModels<HomeViewModel>()
     private var isFavorite = false
+    private var currentUserId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         showLoading(true)
+        setupObservers()
+
         if (viewModel.randomUser.value == null) {
             viewModel.getRandomUser()
-            CoroutineScope(Dispatchers.IO).launch {
-                val count = viewModel.checkUser(id)
-                withContext(Dispatchers.Main) {
-                    if (count != null) {
-                        if (count > 0) {
-                            isFavorite = true
-                            viewModel.getRandomUser()
-                        }
-                    }
-                }
-            }
-        }
-
-        viewModel.randomUser.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                binding.tvName.text = user.name
-                binding.tvUsername.text = user.login
-                binding.tvCompany.text = user.company
-                binding.tvLocation.text = user.location
-                binding.tvBio.text = user.bio
-
-                val ivProfile = binding.ivProfile
-                Glide.with(this)
-                    .load(user.avatarUrl)
-                    .into(ivProfile)
-                showLoading(false)
-            }
-
-            binding.btnDetails.setOnClickListener {
-                Intent(activity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, user?.login)
-                    it.putExtra(DetailUserActivity.EXTRA_ID, user?.id)
-                    it.putExtra(DetailUserActivity.EXTRA_URL, user?.avatarUrl)
-                    startActivity(it)
-                }
-            }
         }
 
         binding.btnClear.setOnClickListener {
             viewModel.getRandomUser()
             showLoading(true)
         }
+    }
 
-        binding.btnFavorite.setOnClickListener {
-            isFavorite = !isFavorite
-            val username = viewModel.randomUser.value?.login
-            val id = viewModel.randomUser.value?.id
-            val avatarUrl = viewModel.randomUser.value?.avatarUrl
-            viewModel.addToFavorite(username.toString(), id!!, avatarUrl.toString())
-            Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
-            viewModel.getRandomUser()
-            showLoading(true)
+    override fun onResume() {
+        super.onResume()
+        checkIfFavorite()
+    }
+
+    private fun setupObservers() {
+        viewModel.randomUser.observe(viewLifecycleOwner) { user ->
+            user?.let {
+                currentUserId = user.id
+                updateUI(it)
+                checkIfFavorite()
+            }
+        }
+    }
+
+    private fun updateUI(user: DetailUserResponse) {
+        binding.apply {
+            tvName.text = user.name
+            tvUsername.text = user.login
+            tvCompany.text = user.company
+            tvLocation.text = user.location
+
+            Glide.with(this@HomeFragment)
+                .load(user.avatarUrl)
+                .into(ivProfile)
+
+            btnDetails.setOnClickListener {
+                Intent(activity, DetailUserActivity::class.java).apply {
+                    putExtra(DetailUserActivity.EXTRA_USERNAME, user.login)
+                    putExtra(DetailUserActivity.EXTRA_ID, user.id)
+                    putExtra(DetailUserActivity.EXTRA_URL, user.avatarUrl)
+                    startActivity(this)
+                }
+            }
+
+            btnFavorite.setOnClickListener {
+                toggleFavorite(user)
+            }
+        }
+        showLoading(false)
+    }
+
+    private fun toggleFavorite(user: DetailUserResponse) {
+        isFavorite = !isFavorite
+        viewModel.addToFavorite(user.login, user.id, user.avatarUrl)
+        Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
+        viewModel.getRandomUser()
+        showLoading(true)
+    }
+
+    private fun checkIfFavorite() {
+        currentUserId?.let { id ->
+            CoroutineScope(Dispatchers.IO).launch {
+                val count = viewModel.checkUser(id)
+                withContext(Dispatchers.Main) {
+                    if (count != null && count > 0) {
+                        isFavorite = true
+                        viewModel.getRandomUser()
+                        showLoading(true)
+                    }
+                }
+            }
         }
     }
 
@@ -102,3 +123,4 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
+

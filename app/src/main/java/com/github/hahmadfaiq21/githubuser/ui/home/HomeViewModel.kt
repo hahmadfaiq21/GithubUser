@@ -30,15 +30,12 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addToFavorite(username: String, id: Int, avatarUrl: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val existingUser = userDao?.checkUser(id)
-            if (existingUser == null) {
-                val user = FavoriteUser(username, id, avatarUrl)
-                userDao?.addToFavorite(user)
-            } else {
-                withContext(Dispatchers.Main) {
-                    Log.d("HomeViewModel", "User is already in favorites")
-                }
-            }
+            val user = FavoriteUser(
+                username,
+                id,
+                avatarUrl
+            )
+            userDao?.addToFavorite(user)
         }
     }
 
