@@ -8,7 +8,6 @@ import androidx.room.Query
 
 @Dao
 interface FavoriteUserDao {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToFavorite(favoriteUser: FavoriteUser)
 

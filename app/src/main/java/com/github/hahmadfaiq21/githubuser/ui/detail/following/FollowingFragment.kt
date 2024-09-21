@@ -23,39 +23,40 @@ class FollowingFragment : Fragment(R.layout.fragment_follow) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val args = arguments
-        username = args?.getString(DetailUserActivity.EXTRA_USERNAME).toString()
-
         _binding = FragmentFollowBinding.bind(view)
+        username = arguments?.getString(DetailUserActivity.EXTRA_USERNAME).orEmpty()
 
+        setupRecyclerView()
+        setupViewModel()
+        showLoading(true)
+    }
+
+    private fun setupRecyclerView() {
         adapter = UserAdapter()
         adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserResponse) {
-                Intent(activity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
-                    it.putExtra(DetailUserActivity.EXTRA_ID, data.id)
-                    it.putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
-                    startActivity(it)
+                Intent(activity, DetailUserActivity::class.java).apply {
+                    putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
+                    putExtra(DetailUserActivity.EXTRA_ID, data.id)
+                    putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
+                    startActivity(this)
                 }
             }
         })
 
-        binding.apply {
-            rvUser.setHasFixedSize(true)
-            rvUser.layoutManager = LinearLayoutManager(activity)
-            rvUser.adapter = adapter
+        binding.rvUser.apply {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+            adapter = this@FollowingFragment.adapter
         }
+    }
 
-        showLoading(true)
-
-        followingViewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        )[FollowingViewModel::class.java]
+    private fun setupViewModel() {
+        followingViewModel = ViewModelProvider(this)[FollowingViewModel::class.java]
         followingViewModel.setListFollowing(username)
         followingViewModel.listFollowing.observe(viewLifecycleOwner) { following ->
-            if (following != null) {
-                adapter.setList(following)
+            following?.let {
+                adapter.setList(it)
                 showLoading(false)
             }
         }
@@ -65,8 +66,8 @@ class FollowingFragment : Fragment(R.layout.fragment_follow) {
         binding.progressBar.visibility = if (state) View.VISIBLE else View.GONE
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         _binding = null
     }
 }

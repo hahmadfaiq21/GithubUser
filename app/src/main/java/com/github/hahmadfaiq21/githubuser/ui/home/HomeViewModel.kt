@@ -13,7 +13,6 @@ import com.github.hahmadfaiq21.githubuser.data.response.DetailUserResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,7 +48,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 override fun onResponse(call: Call<Users>, response: Response<Users>) {
                     if (response.isSuccessful) {
                         val users =
-                            response.body()?.items?.filterNot { it.id in favoriteUserIds } // Filter users not in favorite
+                            response.body()?.items?.filterNot { it.id in favoriteUserIds }
                         if (users.isNullOrEmpty()) {
                             randomUser.postValue(null)
                             Log.d(

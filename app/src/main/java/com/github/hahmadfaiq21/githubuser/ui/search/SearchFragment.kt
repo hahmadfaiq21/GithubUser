@@ -25,17 +25,42 @@ class SearchFragment : Fragment() {
     private val viewModel by viewModels<SearchViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+        setupSearch()
+        observeViewModel()
+    }
+
+    private fun setupRecyclerView() {
+        adapter = UserAdapter()
+        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
+            override fun onItemClicked(data: UserResponse) {
+                Intent(activity, DetailUserActivity::class.java).apply {
+                    putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
+                    putExtra(DetailUserActivity.EXTRA_ID, data.id)
+                    putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
+                    startActivity(this)
+                }
+            }
+        })
+
+        binding.rvUser.apply {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+            adapter = this@SearchFragment.adapter
+        }
+    }
+
+    private fun setupSearch() {
         binding.apply {
             btnSearch.setOnClickListener {
                 searchUser()
@@ -47,71 +72,39 @@ class SearchFragment : Fragment() {
                 showLoading(false)
             }
 
-            etQuery.addTextChangedListener {
+            etQuery.addTextChangedListener { text ->
                 showLoading(true)
-                val query = it?.toString()
-                if (!query.isNullOrEmpty()) {
-                    btnClear.visibility = View.VISIBLE
-                    searchUser()
-                } else {
-                    btnClear.visibility = View.GONE
-                    showLoading(false)
-                }
+                btnClear.visibility = if (!text.isNullOrEmpty()) View.VISIBLE else View.GONE
+                if (!text.isNullOrEmpty()) searchUser() else showLoading(false)
             }
 
             etQuery.setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     searchUser()
                     hideKeyboard()
-                    return@setOnKeyListener true
-                }
-                return@setOnKeyListener false
-            }
-        }
-
-        viewModel.listUsers.observe(viewLifecycleOwner) { users ->
-            if (users != null) {
-                Log.d("Users", users.toString())
-                adapter.setList(users)
-                showLoading(false)
-            } else {
-                Log.d("Users", "No data found")
+                    true
+                } else false
             }
         }
     }
 
-    private fun setupRecyclerView() {
-        adapter = UserAdapter()
-        adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
-            override fun onItemClicked(data: UserResponse) {
-                Intent(activity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
-                    it.putExtra(DetailUserActivity.EXTRA_ID, data.id)
-                    it.putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
-                    startActivity(it)
-                }
-            }
-        })
-
-        binding.rvUser.layoutManager = LinearLayoutManager(activity)
-        binding.rvUser.setHasFixedSize(true)
-        binding.rvUser.adapter = adapter
+    private fun observeViewModel() {
+        viewModel.listUsers.observe(viewLifecycleOwner) { users ->
+            users?.let {
+                adapter.setList(it)
+                showLoading(false)
+            } ?: Log.d("Users", "No data found")
+        }
     }
 
     private fun searchUser() {
-        binding.apply {
-            val query = etQuery.text.toString()
-            if (query.isEmpty()) return
-            viewModel.setSearchUsers(query)
-        }
+        val query = binding.etQuery.text.toString()
+        if (query.isNotEmpty()) viewModel.setSearchUsers(query)
     }
 
     private fun hideKeyboard() {
-        val inputMethodManager =
-            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        activity?.currentFocus?.let { view ->
-            inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+        (requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(activity?.currentFocus?.windowToken, 0)
     }
 
     private fun showLoading(state: Boolean) {

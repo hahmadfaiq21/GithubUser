@@ -32,5 +32,4 @@ class FollowersViewModel : ViewModel() {
                 }
             })
     }
-
 }

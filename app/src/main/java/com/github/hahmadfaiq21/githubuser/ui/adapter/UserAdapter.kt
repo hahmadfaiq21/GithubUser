@@ -17,18 +17,13 @@ class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
         val oldSize = list.size
         val newSize = userResponses.size
 
-        // Add new userResponses
         if (newSize > oldSize) {
             list.addAll(userResponses.subList(oldSize, newSize))
             notifyItemRangeInserted(oldSize, newSize - oldSize)
-        }
-        // Remove userResponses
-        else if (newSize < oldSize) {
+        } else if (newSize < oldSize) {
             list.subList(newSize, oldSize).clear()
             notifyItemRangeRemoved(newSize, oldSize - newSize)
-        }
-        // Update userResponses if sizes are the same
-        else {
+        } else {
             list.clear()
             list.addAll(userResponses)
             notifyItemRangeChanged(0, newSize)

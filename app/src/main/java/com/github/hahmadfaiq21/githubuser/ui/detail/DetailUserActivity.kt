@@ -31,12 +31,22 @@ class DetailUserActivity : AppCompatActivity() {
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
 
-        if (username != null) {
-            detailUserViewModel.setUserDetail(username)
+        username?.let { detailUserViewModel.setUserDetail(it) }
+
+        observeUserDetails()
+        checkFavoriteStatus(id)
+
+        binding.apply {
+            btnBack.setOnClickListener { finish() }
+            fab.setOnClickListener { toggleFavorite(username, id, avatarUrl) }
         }
 
-        detailUserViewModel.user.observe(this) {
-            if (it != null) {
+        setupViewPager(username)
+    }
+
+    private fun observeUserDetails() {
+        detailUserViewModel.user.observe(this) { user ->
+            user?.let {
                 binding.apply {
                     Glide.with(this@DetailUserActivity)
                         .load(it.avatarUrl)
@@ -54,54 +64,41 @@ class DetailUserActivity : AppCompatActivity() {
                 }
             }
         }
+    }
 
+    private fun checkFavoriteStatus(id: Int) {
         CoroutineScope(Dispatchers.IO).launch {
             val count = detailUserViewModel.checkUser(id)
             withContext(Dispatchers.Main) {
-                if (count != null) {
-                    if (count > 0) {
-                        binding.fab.setImageResource(R.drawable.ic_favorite)
-                        isFavorite = true
-                    } else {
-                        binding.fab.setImageResource(R.drawable.ic_unfavorite)
-                        isFavorite = false
-                    }
-                }
+                isFavorite = (count ?: 0) > 0
+                toggleFavoriteIcon(binding.fab)
             }
         }
+    }
 
-        binding.btnBack.setOnClickListener {
-            finish()
+    private fun toggleFavorite(username: String?, id: Int, avatarUrl: String?) {
+        isFavorite = !isFavorite
+        if (isFavorite) {
+            detailUserViewModel.addToFavorite(username ?: "", id, avatarUrl ?: "")
+            showSnackBar("Added to Favorite")
+        } else {
+            detailUserViewModel.removeFromFavorite(id)
+            showSnackBar("Removed from Favorite")
         }
+        toggleFavoriteIcon(binding.fab)
+    }
 
-        binding.fab.setOnClickListener {
-            isFavorite = !isFavorite
-            if (isFavorite) {
-                detailUserViewModel.addToFavorite(username.toString(), id, avatarUrl.toString())
-                showSnackBar("Added to Favorite")
-            } else {
-                detailUserViewModel.removeFromFavorite(id)
-                showSnackBar("Removed from Favorite")
-            }
-            toggleFavoriteIcon(binding.fab)
-        }
+    private fun toggleFavoriteIcon(fab: FloatingActionButton) {
+        fab.setImageResource(if (isFavorite) R.drawable.ic_favorite else R.drawable.ic_unfavorite)
+    }
 
-        val bundle = Bundle()
-        bundle.putString(EXTRA_USERNAME, username)
-
+    private fun setupViewPager(username: String?) {
+        val bundle = Bundle().apply { putString(EXTRA_USERNAME, username) }
         val sectionPagerAdapter = SectionPagerAdapter(this, bundle)
         binding.viewPager.adapter = sectionPagerAdapter
         TabLayoutMediator(binding.tabs, binding.viewPager) { tab, position ->
             tab.text = sectionPagerAdapter.getPageTitle(position, this)
         }.attach()
-    }
-
-    private fun toggleFavoriteIcon(fab: FloatingActionButton) {
-        if (isFavorite) {
-            fab.setImageResource(R.drawable.ic_favorite)
-        } else {
-            fab.setImageResource(R.drawable.ic_unfavorite)
-        }
     }
 
     private fun showSnackBar(message: String) {
@@ -113,5 +110,4 @@ class DetailUserActivity : AppCompatActivity() {
         const val EXTRA_ID = "extra_id"
         const val EXTRA_URL = "extra_url"
     }
-
 }

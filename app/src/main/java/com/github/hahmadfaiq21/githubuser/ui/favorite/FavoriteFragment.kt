@@ -24,67 +24,59 @@ class FavoriteFragment : Fragment() {
     private val favoriteViewModel by viewModels<FavoriteViewModel>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentFavoriteBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val toolbar = binding.toolbar
-        (activity as AppCompatActivity).setSupportActionBar(toolbar)
-        (activity as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+        setupToolbar()
+        setupRecyclerView()
+        observeFavoriteUsers()
+    }
 
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).apply {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.setDisplayShowTitleEnabled(false)
+        }
+    }
+
+    private fun setupRecyclerView() {
         adapter = UserAdapter()
         adapter.setOnItemClickCallback(object : UserAdapter.OnItemClickCallback {
             override fun onItemClicked(data: UserResponse) {
-                Intent(activity, DetailUserActivity::class.java).also {
-                    it.putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
-                    it.putExtra(DetailUserActivity.EXTRA_ID, data.id)
-                    it.putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
-                    startActivity(it)
+                Intent(activity, DetailUserActivity::class.java).apply {
+                    putExtra(DetailUserActivity.EXTRA_USERNAME, data.login)
+                    putExtra(DetailUserActivity.EXTRA_ID, data.id)
+                    putExtra(DetailUserActivity.EXTRA_URL, data.avatarUrl)
+                    startActivity(this)
                 }
             }
         })
 
-        binding.apply {
-            rvUser.setHasFixedSize(true)
-            rvUser.layoutManager = LinearLayoutManager(activity)
-            rvUser.adapter = adapter
+        binding.rvUser.apply {
+            layoutManager = LinearLayoutManager(activity)
+            setHasFixedSize(true)
+            adapter = this@FavoriteFragment.adapter
         }
+    }
 
+
+    private fun observeFavoriteUsers() {
         favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val list = mapList(it)
-                adapter.setList(list)
-            }
+            it?.let { users -> adapter.setList(mapList(users)) }
         }
     }
 
     private fun mapList(users: List<FavoriteUser>): ArrayList<UserResponse> {
-        val listUsers = ArrayList<UserResponse>()
-        for (user in users) {
-            val userMapped = UserResponse(
-                user.id,
-                user.login,
-                user.avatarUrl
-            )
-            listUsers.add(userMapped)
-        }
-        return listUsers
-    }
-
-    override fun onResume() {
-        super.onResume()
-        favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
-            if (it != null) {
-                val list = mapList(it)
-                adapter.setList(list)
-            }
-        }
+        return users.map {
+            UserResponse(it.id, it.login, it.avatarUrl)
+        } as ArrayList<UserResponse>
     }
 
     override fun onDestroyView() {
