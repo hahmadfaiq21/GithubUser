@@ -116,3 +116,4 @@ class SearchFragment : Fragment() {
         _binding = null
     }
 }
+

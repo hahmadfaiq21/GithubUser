@@ -66,7 +66,6 @@ class FavoriteFragment : Fragment() {
         }
     }
 
-
     private fun observeFavoriteUsers() {
         favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
             it?.let { users -> adapter.setList(mapList(users)) }

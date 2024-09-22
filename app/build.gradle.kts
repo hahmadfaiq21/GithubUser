@@ -70,7 +70,6 @@ dependencies {
     implementation(libs.androidx.coordinatorlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-
     implementation (libs.androidx.room.ktx)
     implementation (libs.androidx.room.runtime)
     annotationProcessor (libs.androidx.room.compiler)
