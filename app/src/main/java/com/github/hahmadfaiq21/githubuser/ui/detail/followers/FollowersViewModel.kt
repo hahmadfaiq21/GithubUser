@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.github.hahmadfaiq21.githubuser.api.RetrofitClient
-import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

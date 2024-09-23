@@ -13,7 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentSearchBinding
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity

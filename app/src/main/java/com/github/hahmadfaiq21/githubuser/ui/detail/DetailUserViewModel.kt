@@ -8,7 +8,7 @@ import com.github.hahmadfaiq21.githubuser.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
 import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.response.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.DetailUserResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

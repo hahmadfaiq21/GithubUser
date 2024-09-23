@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.github.hahmadfaiq21.githubuser.data.response.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.ItemUserBinding
 
 class UserAdapter : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
