@@ -1,5 +1,6 @@
-package com.github.hahmadfaiq21.githubuser.data.remote
+package com.github.hahmadfaiq21.githubuser.data
 
+import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.google.gson.annotations.SerializedName
 
 data class Users(

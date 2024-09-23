@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
-import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFavoriteBinding
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity

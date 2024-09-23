@@ -4,11 +4,11 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import com.github.hahmadfaiq21.githubuser.api.RetrofitClient
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
 import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

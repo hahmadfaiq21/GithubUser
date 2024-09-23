@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.R
-import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFollowBinding
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity

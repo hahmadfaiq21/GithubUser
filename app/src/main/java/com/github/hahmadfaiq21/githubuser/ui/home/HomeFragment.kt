@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
-import com.github.hahmadfaiq21.githubuser.data.remote.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 import com.google.android.material.snackbar.Snackbar

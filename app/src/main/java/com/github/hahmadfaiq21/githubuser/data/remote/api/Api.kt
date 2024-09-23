@@ -1,9 +1,9 @@
-package com.github.hahmadfaiq21.githubuser.api
+package com.github.hahmadfaiq21.githubuser.data.remote.api
 
 import com.github.hahmadfaiq21.githubuser.BuildConfig
-import com.github.hahmadfaiq21.githubuser.data.remote.DetailUserResponse
-import com.github.hahmadfaiq21.githubuser.data.remote.Users
-import com.github.hahmadfaiq21.githubuser.data.remote.UserResponse
+import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.data.Users
+import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Headers

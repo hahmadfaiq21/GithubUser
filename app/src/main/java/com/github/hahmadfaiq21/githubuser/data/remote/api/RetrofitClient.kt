@@ -1,4 +1,4 @@
-package com.github.hahmadfaiq21.githubuser.api
+package com.github.hahmadfaiq21.githubuser.data.remote.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
