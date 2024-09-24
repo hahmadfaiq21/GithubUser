@@ -108,10 +108,9 @@ class HomeFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 val count = viewModel.checkUser(id)
                 withContext(Dispatchers.Main) {
-                    if (isFavorite && count > 0) {
-                        viewModel.getRandomUser()
-                        showLoading(true)
-                    }
+                    isFavorite = count > 0
+                    viewModel.getRandomUser()
+                    showLoading(true)
                 }
             }
         }
@@ -126,4 +125,3 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
-
