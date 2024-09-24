@@ -3,6 +3,7 @@ package com.github.hahmadfaiq21.githubuser.ui.detail
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.hahmadfaiq21.githubuser.R
@@ -11,7 +12,6 @@ import com.github.hahmadfaiq21.githubuser.ui.adapter.SectionPagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -67,7 +67,7 @@ class DetailUserActivity : AppCompatActivity() {
     }
 
     private fun checkFavoriteStatus(id: Int) {
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val count = detailUserViewModel.checkUser(id)
             withContext(Dispatchers.Main) {
                 isFavorite = (count ?: 0) > 0

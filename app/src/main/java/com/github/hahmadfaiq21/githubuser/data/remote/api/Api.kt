@@ -1,10 +1,10 @@
 package com.github.hahmadfaiq21.githubuser.data.remote.api
 
 import com.github.hahmadfaiq21.githubuser.BuildConfig
-import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.data.Users
+import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Path
@@ -13,25 +13,25 @@ import retrofit2.http.Query
 interface Api {
     @GET("search/users")
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
-    fun getSearchUsers(
+    suspend fun getSearchUsers(
         @Query("q") query: String
-    ): Call<Users>
+    ): Response<Users>
 
     @GET("users/{username}")
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
-    fun getUserDetail(
+    suspend fun getUserDetail(
         @Path("username") username: String
-    ): Call<DetailUserResponse>
+    ): Response<DetailUserResponse>
 
     @GET("users/{username}/followers")
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
-    fun getFollowers(
+    suspend fun getFollowers(
         @Path("username") username: String
-    ): Call<ArrayList<UserResponse>>
+    ): Response<ArrayList<UserResponse>>
 
     @GET("users/{username}/following")
     @Headers("Authorization: token ${BuildConfig.GITHUB_TOKEN}")
-    fun getFollowing(
+    suspend fun getFollowing(
         @Path("username") username: String
-    ): Call<ArrayList<UserResponse>>
+    ): Response<ArrayList<UserResponse>>
 }

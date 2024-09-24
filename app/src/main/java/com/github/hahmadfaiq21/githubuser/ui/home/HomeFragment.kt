@@ -2,17 +2,17 @@ package com.github.hahmadfaiq21.githubuser.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -101,14 +101,10 @@ class HomeFragment : Fragment() {
 
     private fun checkIfFavorite() {
         currentUserId?.let { id ->
-            CoroutineScope(Dispatchers.IO).launch {
+            lifecycleScope.launch(Dispatchers.IO) {
                 val count = viewModel.checkUser(id)
                 withContext(Dispatchers.Main) {
-                    if (count != null && count > 0) {
-                        isFavorite = true
-                        viewModel.getRandomUser()
-                        showLoading(true)
-                    }
+                    isFavorite = count != null && count > 0
                 }
             }
         }

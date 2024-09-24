@@ -3,33 +3,27 @@ package com.github.hahmadfaiq21.githubuser.ui.search
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
-import com.github.hahmadfaiq21.githubuser.data.Users
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class SearchViewModel : ViewModel() {
     val listUsers = MutableLiveData<ArrayList<UserResponse>>()
 
     fun setSearchUsers(query: String) {
-        RetrofitClient.apiInstance.getSearchUsers(query)
-            .enqueue(object : Callback<Users> {
-                override fun onResponse(
-                    call: Call<Users>,
-                    response: Response<Users>
-                ) {
-                    if (response.isSuccessful) {
-                        listUsers.postValue(response.body()?.items)
-                    } else {
-                        Log.e("API Error", response.errorBody().toString())
-                    }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val response = RetrofitClient.apiInstance.getSearchUsers(query)
+                if (response.isSuccessful) {
+                    listUsers.postValue(response.body()?.items)
+                } else {
+                    Log.e("API Error", response.errorBody()?.toString() ?: "Unknown error")
                 }
-
-                override fun onFailure(call: Call<Users>, t: Throwable) {
-                    Log.e("API Failure", "Error: ${t.message}")
-                }
-            })
+            } catch (e: Exception) {
+                Log.e("API Failure", "Error: ${e.message}")
+            }
+        }
     }
 }
