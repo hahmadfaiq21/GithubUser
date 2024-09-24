@@ -58,7 +58,7 @@ class FollowersFragment : Fragment(R.layout.fragment_follow) {
     private fun setupObservers() {
         val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
         val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
-        val factory = ViewModelFactory(requireActivity().application, repository)
+        val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         followersViewModel = ViewModelProvider(this, factory)[FollowersViewModel::class.java]
         followersViewModel.setListFollowers(username)
         followersViewModel.listFollowers.observe(viewLifecycleOwner) { followers ->

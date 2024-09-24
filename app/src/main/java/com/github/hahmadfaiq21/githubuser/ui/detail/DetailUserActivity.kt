@@ -37,7 +37,7 @@ class DetailUserActivity : AppCompatActivity() {
 
         val favoriteDao = UserDatabase.getDatabase(this)!!.favoriteUserDao()
         val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
-        val factory = ViewModelFactory(application, repository)
+        val factory = ViewModelFactory.getInstance(application, repository)
         detailUserViewModel = ViewModelProvider(this, factory)[DetailUserViewModel::class.java]
         username?.let { detailUserViewModel.setUserDetail(it) }
 
@@ -77,7 +77,7 @@ class DetailUserActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val count = detailUserViewModel.checkUser(id)
             withContext(Dispatchers.Main) {
-                isFavorite = true && count > 0
+                isFavorite = count > 0
                 toggleFavoriteIcon(binding.fab)
             }
         }

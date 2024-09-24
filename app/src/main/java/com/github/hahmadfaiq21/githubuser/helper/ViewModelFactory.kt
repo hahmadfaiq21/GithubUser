@@ -32,4 +32,19 @@ class ViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
+
+    companion object {
+        @Volatile
+        private var INSTANCE: ViewModelFactory? = null
+
+        @JvmStatic
+        fun getInstance(application: Application, userRepository: UserRepository): ViewModelFactory {
+            if (INSTANCE == null) {
+                synchronized(ViewModelFactory::class.java) {
+                    INSTANCE = ViewModelFactory(application, userRepository)
+                }
+            }
+            return INSTANCE as ViewModelFactory
+        }
+    }
 }

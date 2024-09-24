@@ -72,7 +72,7 @@ class FavoriteFragment : Fragment() {
     private fun observeFavoriteUsers() {
         val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
         val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
-        val factory = ViewModelFactory(requireActivity().application, repository)
+        val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
         viewModel.getFavoriteUser().observe(viewLifecycleOwner) {
             it?.let { users -> adapter.setList(mapList(users)) }

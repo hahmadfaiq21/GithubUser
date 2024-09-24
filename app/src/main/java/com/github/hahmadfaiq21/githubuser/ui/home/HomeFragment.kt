@@ -61,13 +61,12 @@ class HomeFragment : Fragment() {
     private fun setupObservers() {
         val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
         val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
-        val factory = ViewModelFactory(requireActivity().application, repository)
+        val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
             user?.let {
                 currentUserId = user.id
                 updateUI(it)
-                checkIfFavorite()
             }
         }
     }
@@ -112,7 +111,10 @@ class HomeFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 val count = viewModel.checkUser(id)
                 withContext(Dispatchers.Main) {
-                    isFavorite = true && count > 0
+                    if (isFavorite && count > 0) {
+                        viewModel.getRandomUser()
+                        showLoading(true)
+                    }
                 }
             }
         }
