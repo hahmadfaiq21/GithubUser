@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.R
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFollowBinding
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
@@ -56,8 +54,7 @@ class FollowingFragment : Fragment(R.layout.fragment_follow) {
     }
 
     private fun setupObservers() {
-        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
-        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
+        val repository = UserRepository(requireActivity().application)
         val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         followingViewModel = ViewModelProvider(this, factory)[FollowingViewModel::class.java]
         followingViewModel.setListFollowing(username)

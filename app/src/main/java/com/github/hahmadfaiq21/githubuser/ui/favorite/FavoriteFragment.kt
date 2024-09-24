@@ -10,8 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFavoriteBinding
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
@@ -70,8 +68,7 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun observeFavoriteUsers() {
-        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
-        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
+        val repository = UserRepository(requireActivity().application)
         val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
         viewModel.getFavoriteUser().observe(viewLifecycleOwner) {
@@ -83,6 +80,11 @@ class FavoriteFragment : Fragment() {
         return users.map {
             UserResponse(it.id, it.login, it.avatarUrl)
         } as ArrayList<UserResponse>
+    }
+
+    override fun onResume() {
+        super.onResume()
+        observeFavoriteUsers()
     }
 
     override fun onDestroyView() {

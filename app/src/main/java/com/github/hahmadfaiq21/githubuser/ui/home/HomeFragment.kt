@@ -9,8 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
@@ -59,8 +57,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
-        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
+        val repository = UserRepository(requireActivity().application)
         val factory = ViewModelFactory.getInstance(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->

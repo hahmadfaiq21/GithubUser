@@ -7,8 +7,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.hahmadfaiq21.githubuser.R
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.databinding.ActivityDetailUserBinding
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
@@ -35,8 +33,7 @@ class DetailUserActivity : AppCompatActivity() {
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
 
-        val favoriteDao = UserDatabase.getDatabase(this)!!.favoriteUserDao()
-        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
+        val repository = UserRepository(this.application)
         val factory = ViewModelFactory.getInstance(application, repository)
         detailUserViewModel = ViewModelProvider(this, factory)[DetailUserViewModel::class.java]
         username?.let { detailUserViewModel.setUserDetail(it) }
@@ -86,7 +83,7 @@ class DetailUserActivity : AppCompatActivity() {
     private fun toggleFavorite(id: Int, username: String?, avatarUrl: String?) {
         isFavorite = !isFavorite
         if (isFavorite) {
-            detailUserViewModel.addToFavorite(id,username ?: "", avatarUrl ?: "")
+            detailUserViewModel.addToFavorite(id, username ?: "", avatarUrl ?: "")
             showSnackBar("Added to Favorite")
         } else {
             detailUserViewModel.removeFromFavorite(id)
