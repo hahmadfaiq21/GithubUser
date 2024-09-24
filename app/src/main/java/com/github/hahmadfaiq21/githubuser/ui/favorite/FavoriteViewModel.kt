@@ -4,8 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
-import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 
 class FavoriteViewModel(application: Application, private val userRepository: UserRepository) :
