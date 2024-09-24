@@ -8,12 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
 import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DetailUserViewModel(application: Application) : AndroidViewModel(application) {
+class DetailUserViewModel(application: Application, private val userRepository: UserRepository) :
+    AndroidViewModel(application) {
 
     val user = MutableLiveData<DetailUserResponse>()
 
@@ -27,7 +28,7 @@ class DetailUserViewModel(application: Application) : AndroidViewModel(applicati
     fun setUserDetail(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.apiInstance.getUserDetail(username)
+                val response = userRepository.getUserDetail(username)
                 if (response.isSuccessful) {
                     user.postValue(response.body())
                 } else {
@@ -41,11 +42,7 @@ class DetailUserViewModel(application: Application) : AndroidViewModel(applicati
 
     fun addToFavorite(username: String, id: Int, avatarUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = FavoriteUser(
-                username,
-                id,
-                avatarUrl
-            )
+            val user = FavoriteUser(username, id, avatarUrl)
             userDao?.addToFavorite(user)
         }
     }

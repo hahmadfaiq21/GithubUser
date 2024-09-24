@@ -4,19 +4,19 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FollowingViewModel : ViewModel() {
+class FollowingViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     val listFollowing = MutableLiveData<ArrayList<UserResponse>>()
 
     fun setListFollowing(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val response = RetrofitClient.apiInstance.getFollowing(username)
+                val response = userRepository.getFollowing(username)
                 if (response.isSuccessful) {
                     listFollowing.postValue(response.body())
                 } else {

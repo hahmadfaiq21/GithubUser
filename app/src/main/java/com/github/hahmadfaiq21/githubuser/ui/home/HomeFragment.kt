@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
+import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +24,7 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<HomeViewModel>()
+    private lateinit var viewModel: HomeViewModel
     private var isFavorite = false
     private var currentUserId: Int? = null
 
@@ -55,6 +58,9 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
+        val repository = UserRepository(RetrofitClient.apiInstance)
+        val factory = ViewModelFactory(requireActivity().application, repository)
+        viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
             user?.let {
                 currentUserId = user.id

@@ -1,13 +1,16 @@
 package com.github.hahmadfaiq21.githubuser.ui.detail
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.hahmadfaiq21.githubuser.R
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.databinding.ActivityDetailUserBinding
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
+import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
 import com.github.hahmadfaiq21.githubuser.ui.adapter.SectionPagerAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -19,7 +22,7 @@ import kotlinx.coroutines.withContext
 class DetailUserActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailUserBinding
-    private val detailUserViewModel by viewModels<DetailUserViewModel>()
+    private lateinit var detailUserViewModel: DetailUserViewModel
     private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,20 +34,22 @@ class DetailUserActivity : AppCompatActivity() {
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
 
+        val repository = UserRepository(RetrofitClient.apiInstance)
+        val factory = ViewModelFactory(application, repository)
+        detailUserViewModel = ViewModelProvider(this, factory)[DetailUserViewModel::class.java]
         username?.let { detailUserViewModel.setUserDetail(it) }
-
-        observeUserDetails()
-        checkFavoriteStatus(id)
 
         binding.apply {
             btnBack.setOnClickListener { finish() }
             fab.setOnClickListener { toggleFavorite(username, id, avatarUrl) }
         }
 
+        setupObservers()
+        checkFavoriteStatus(id)
         setupViewPager(username)
     }
 
-    private fun observeUserDetails() {
+    private fun setupObservers() {
         detailUserViewModel.user.observe(this) { user ->
             user?.let {
                 binding.apply {

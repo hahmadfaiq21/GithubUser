@@ -8,12 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
 import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
-import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application, private val userRepository: UserRepository) :
+    AndroidViewModel(application) {
 
     val randomUser: MutableLiveData<DetailUserResponse?> = MutableLiveData()
     private var userDao: FavoriteUserDao?
@@ -25,11 +26,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     fun addToFavorite(username: String, id: Int, avatarUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = FavoriteUser(
-                username,
-                id,
-                avatarUrl
-            )
+            val user = FavoriteUser(username, id, avatarUrl)
             userDao?.addToFavorite(user)
         }
     }
@@ -41,8 +38,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val favoriteUserIds = userDao?.getAllFavoriteUserIds() ?: emptyList()
-                val response = RetrofitClient.apiInstance.getSearchUsers(query)
-
+                val response = userRepository.getSearchUser(query)
                 if (response.isSuccessful) {
                     val users = response.body()?.items?.filterNot { it.id in favoriteUserIds }
                     if (!users.isNullOrEmpty()) {
@@ -66,7 +62,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private suspend fun getUserDetail(username: String) {
         try {
-            val response = RetrofitClient.apiInstance.getUserDetail(username)
+            val response = userRepository.getUserDetail(username)
             if (response.isSuccessful) {
                 randomUser.postValue(response.body())
             } else {
@@ -76,5 +72,4 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             Log.e("API Failure", "Error: ${e.message}")
         }
     }
-
 }

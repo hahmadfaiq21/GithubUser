@@ -11,10 +11,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentSearchBinding
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
+import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 
@@ -22,7 +25,7 @@ class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: UserAdapter
-    private val viewModel by viewModels<SearchViewModel>()
+    private lateinit var viewModel: SearchViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +40,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         setupSearch()
-        observeViewModel()
+        setupObservers()
     }
 
     private fun setupRecyclerView() {
@@ -88,7 +91,10 @@ class SearchFragment : Fragment() {
         }
     }
 
-    private fun observeViewModel() {
+    private fun setupObservers() {
+        val repository = UserRepository(RetrofitClient.apiInstance)
+        val factory = ViewModelFactory(requireActivity().application, repository)
+        viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
         viewModel.listUsers.observe(viewLifecycleOwner) { users ->
             users?.let {
                 adapter.setList(it)

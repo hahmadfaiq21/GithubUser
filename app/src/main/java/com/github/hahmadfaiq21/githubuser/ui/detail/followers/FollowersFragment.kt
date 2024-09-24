@@ -7,8 +7,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.R
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFollowBinding
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
+import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
 
@@ -27,7 +30,7 @@ class FollowersFragment : Fragment(R.layout.fragment_follow) {
         username = arguments?.getString(DetailUserActivity.EXTRA_USERNAME).orEmpty()
 
         setupRecyclerView()
-        setupViewModel()
+        setupObservers()
         showLoading(true)
     }
 
@@ -51,8 +54,10 @@ class FollowersFragment : Fragment(R.layout.fragment_follow) {
         }
     }
 
-    private fun setupViewModel() {
-        followersViewModel = ViewModelProvider(this)[FollowersViewModel::class.java]
+    private fun setupObservers() {
+        val repository = UserRepository(RetrofitClient.apiInstance)
+        val factory = ViewModelFactory(requireActivity().application, repository)
+        followersViewModel = ViewModelProvider(this, factory)[FollowersViewModel::class.java]
         followersViewModel.setListFollowers(username)
         followersViewModel.listFollowers.observe(viewLifecycleOwner) { followers ->
             followers?.let {
