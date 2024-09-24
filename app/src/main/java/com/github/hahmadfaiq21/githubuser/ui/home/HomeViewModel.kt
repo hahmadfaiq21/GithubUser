@@ -5,9 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
-import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,27 +14,22 @@ class HomeViewModel(application: Application, private val userRepository: UserRe
     AndroidViewModel(application) {
 
     val randomUser: MutableLiveData<DetailUserResponse?> = MutableLiveData()
-    private var userDao: FavoriteUserDao?
-    private var userDb: UserDatabase? = UserDatabase.getDatabase(application)
 
-    init {
-        userDao = userDb?.favoriteUserDao()
-    }
-
-    fun addToFavorite(username: String, id: Int, avatarUrl: String) {
+    fun addToFavorite(id: Int, username: String, avatarUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = FavoriteUser(username, id, avatarUrl)
-            userDao?.addToFavorite(user)
+            userRepository.addToFavorite(id, username, avatarUrl)
         }
     }
 
-    suspend fun checkUser(id: Int) = userDao?.checkUser(id)
+    suspend fun checkUser(id: Int): Int {
+        return userRepository.checkUser(id)
+    }
 
     fun getRandomUser() {
         val query = ('a'..'z').random().toString()
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                val favoriteUserIds = userDao?.getAllFavoriteUserIds() ?: emptyList()
+                val favoriteUserIds = userRepository.getAllFavoriteUserIds()
                 val response = userRepository.getSearchUser(query)
                 if (response.isSuccessful) {
                     val users = response.body()?.items?.filterNot { it.id in favoriteUserIds }
@@ -49,7 +41,7 @@ class HomeViewModel(application: Application, private val userRepository: UserRe
                             "HomeViewModel",
                             "All users are already in favorites, fetching a new query."
                         )
-                        getRandomUser() // Try again if all users are favorite
+                        getRandomUser()
                     }
                 } else {
                     Log.e("API Error", response.errorBody().toString())

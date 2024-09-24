@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.github.hahmadfaiq21.githubuser.R
+import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.databinding.ActivityDetailUserBinding
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
@@ -34,14 +35,15 @@ class DetailUserActivity : AppCompatActivity() {
         val id = intent.getIntExtra(EXTRA_ID, 0)
         val avatarUrl = intent.getStringExtra(EXTRA_URL)
 
-        val repository = UserRepository(RetrofitClient.apiInstance)
+        val favoriteDao = UserDatabase.getDatabase(this)!!.favoriteUserDao()
+        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
         val factory = ViewModelFactory(application, repository)
         detailUserViewModel = ViewModelProvider(this, factory)[DetailUserViewModel::class.java]
         username?.let { detailUserViewModel.setUserDetail(it) }
 
         binding.apply {
             btnBack.setOnClickListener { finish() }
-            fab.setOnClickListener { toggleFavorite(username, id, avatarUrl) }
+            fab.setOnClickListener { toggleFavorite(id, username, avatarUrl) }
         }
 
         setupObservers()
@@ -75,16 +77,16 @@ class DetailUserActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             val count = detailUserViewModel.checkUser(id)
             withContext(Dispatchers.Main) {
-                isFavorite = (count ?: 0) > 0
+                isFavorite = true && count > 0
                 toggleFavoriteIcon(binding.fab)
             }
         }
     }
 
-    private fun toggleFavorite(username: String?, id: Int, avatarUrl: String?) {
+    private fun toggleFavorite(id: Int, username: String?, avatarUrl: String?) {
         isFavorite = !isFavorite
         if (isFavorite) {
-            detailUserViewModel.addToFavorite(username ?: "", id, avatarUrl ?: "")
+            detailUserViewModel.addToFavorite(id,username ?: "", avatarUrl ?: "")
             showSnackBar("Added to Favorite")
         } else {
             detailUserViewModel.removeFromFavorite(id)

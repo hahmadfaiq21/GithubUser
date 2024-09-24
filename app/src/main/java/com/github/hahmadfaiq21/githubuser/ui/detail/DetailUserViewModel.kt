@@ -5,9 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
-import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
-import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 import kotlinx.coroutines.Dispatchers
@@ -17,13 +14,6 @@ class DetailUserViewModel(application: Application, private val userRepository: 
     AndroidViewModel(application) {
 
     val user = MutableLiveData<DetailUserResponse>()
-
-    private var userDao: FavoriteUserDao?
-    private var userDb: UserDatabase? = UserDatabase.getDatabase(application)
-
-    init {
-        userDao = userDb?.favoriteUserDao()
-    }
 
     fun setUserDetail(username: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,18 +30,17 @@ class DetailUserViewModel(application: Application, private val userRepository: 
         }
     }
 
-    fun addToFavorite(username: String, id: Int, avatarUrl: String) {
+    fun addToFavorite(id: Int, username: String, avatarUrl: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            val user = FavoriteUser(username, id, avatarUrl)
-            userDao?.addToFavorite(user)
+            userRepository.addToFavorite(id, username, avatarUrl)
         }
     }
 
-    suspend fun checkUser(id: Int) = userDao?.checkUser(id)
+    suspend fun checkUser(id: Int) = userRepository.checkUser(id)
 
     fun removeFromFavorite(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            userDao?.removeFromFavorite(id)
+            userRepository.removeFromFavorite(id)
         }
     }
 }

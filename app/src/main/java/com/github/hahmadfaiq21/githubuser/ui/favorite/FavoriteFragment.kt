@@ -2,26 +2,29 @@ package com.github.hahmadfaiq21.githubuser.ui.favorite
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
+import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
+import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentFavoriteBinding
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
+import com.github.hahmadfaiq21.githubuser.helper.ViewModelFactory
 import com.github.hahmadfaiq21.githubuser.ui.adapter.UserAdapter
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserActivity
-import java.util.ArrayList
 
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: UserAdapter
-    private val favoriteViewModel by viewModels<FavoriteViewModel>()
+    private lateinit var viewModel: FavoriteViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -67,7 +70,11 @@ class FavoriteFragment : Fragment() {
     }
 
     private fun observeFavoriteUsers() {
-        favoriteViewModel.getFavoriteUser()?.observe(viewLifecycleOwner) {
+        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
+        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
+        val factory = ViewModelFactory(requireActivity().application, repository)
+        viewModel = ViewModelProvider(this, factory)[FavoriteViewModel::class.java]
+        viewModel.getFavoriteUser().observe(viewLifecycleOwner) {
             it?.let { users -> adapter.setList(mapList(users)) }
         }
     }

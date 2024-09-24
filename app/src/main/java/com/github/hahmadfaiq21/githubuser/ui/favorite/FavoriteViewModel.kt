@@ -6,17 +6,12 @@ import androidx.lifecycle.LiveData
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUser
 import com.github.hahmadfaiq21.githubuser.data.local.FavoriteUserDao
 import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
+import com.github.hahmadfaiq21.githubuser.helper.UserRepository
 
-class FavoriteViewModel(application: Application) : AndroidViewModel(application) {
+class FavoriteViewModel(application: Application, private val userRepository: UserRepository) :
+    AndroidViewModel(application) {
 
-    private var userDao: FavoriteUserDao?
-    private var userDb: UserDatabase? = UserDatabase.getDatabase(application)
-
-    init {
-        userDao = userDb?.favoriteUserDao()
-    }
-
-    fun getFavoriteUser(): LiveData<List<FavoriteUser>>? {
-        return userDao?.getFavoriteUser()
+    fun getFavoriteUser(): LiveData<List<FavoriteUser>> {
+        return userRepository.getFavoriteUser()
     }
 }

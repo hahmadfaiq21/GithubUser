@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.DetailUserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentHomeBinding
@@ -58,7 +59,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        val repository = UserRepository(RetrofitClient.apiInstance)
+        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
+        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
         val factory = ViewModelFactory(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[HomeViewModel::class.java]
         viewModel.randomUser.observe(viewLifecycleOwner) { user ->
@@ -99,7 +101,7 @@ class HomeFragment : Fragment() {
 
     private fun addToFavorite(user: DetailUserResponse) {
         isFavorite = !isFavorite
-        viewModel.addToFavorite(user.login, user.id, user.avatarUrl)
+        viewModel.addToFavorite(user.id, user.login, user.avatarUrl)
         Snackbar.make(binding.root, "Added to Favorite", Snackbar.LENGTH_SHORT).show()
         viewModel.getRandomUser()
         showLoading(true)
@@ -110,7 +112,7 @@ class HomeFragment : Fragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 val count = viewModel.checkUser(id)
                 withContext(Dispatchers.Main) {
-                    isFavorite = count != null && count > 0
+                    isFavorite = true && count > 0
                 }
             }
         }

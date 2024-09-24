@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.hahmadfaiq21.githubuser.ui.detail.DetailUserViewModel
 import com.github.hahmadfaiq21.githubuser.ui.detail.followers.FollowersViewModel
 import com.github.hahmadfaiq21.githubuser.ui.detail.following.FollowingViewModel
+import com.github.hahmadfaiq21.githubuser.ui.favorite.FavoriteViewModel
 import com.github.hahmadfaiq21.githubuser.ui.home.HomeViewModel
 import com.github.hahmadfaiq21.githubuser.ui.search.SearchViewModel
 
@@ -26,6 +27,8 @@ class ViewModelFactory(
             return FollowersViewModel(userRepository) as T
         } else if (modelClass.isAssignableFrom(FollowingViewModel::class.java)) {
             return FollowingViewModel(userRepository) as T
+        } else if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
+            return FavoriteViewModel(application, userRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }

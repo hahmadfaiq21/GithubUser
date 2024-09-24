@@ -13,6 +13,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.hahmadfaiq21.githubuser.data.local.UserDatabase
 import com.github.hahmadfaiq21.githubuser.data.remote.api.RetrofitClient
 import com.github.hahmadfaiq21.githubuser.data.remote.response.UserResponse
 import com.github.hahmadfaiq21.githubuser.databinding.FragmentSearchBinding
@@ -92,7 +93,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        val repository = UserRepository(RetrofitClient.apiInstance)
+        val favoriteDao = UserDatabase.getDatabase(requireContext())!!.favoriteUserDao()
+        val repository = UserRepository(RetrofitClient.apiInstance, favoriteDao)
         val factory = ViewModelFactory(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, factory)[SearchViewModel::class.java]
         viewModel.listUsers.observe(viewLifecycleOwner) { users ->
