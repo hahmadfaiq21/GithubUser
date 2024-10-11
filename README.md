@@ -1,4 +1,4 @@
-﻿# GithubUser
+﻿# Github User App Using Github REST API
 <p align="center">
   <img src="https://github.com/user-attachments/assets/48f012db-79ba-45ca-b349-9329cac32220">
 </p>
